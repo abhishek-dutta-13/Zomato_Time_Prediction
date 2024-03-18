@@ -1,0 +1,1 @@
+{"Road_traffic_density": ["Low", "Medium", "High", "Jam"], "Festival": ["No", "Yes"], "Weather_conditions": ["Sunny", "Sandstorms", "Stormy", "Windy", "Cloudy", "Fog"], "Type_of_order": ["Buffet", "Snack", "Drinks", "Meal"], "Type_of_vehicle": ["scooter", "electric_scooter", "motorcycle"], "City": ["Urban", "Metropolitian"]}

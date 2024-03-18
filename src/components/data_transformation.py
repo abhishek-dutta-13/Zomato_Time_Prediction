@@ -12,7 +12,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer #Group everything together
 from dataclasses import dataclass
 from src.utils import *
-
+import json
 
 @dataclass
 
@@ -66,7 +66,7 @@ class DataTransformation:
             
             except Exception as e:
                 logger.error("Error in get_data_transformation_object")
-                raise CustomException(e, sys)
+                raise CustomException(e)
 
 
 
@@ -102,9 +102,22 @@ class DataTransformation:
                 df_test["Vehicle_condition"] = df_test["Vehicle_condition"].replace(0,1)
                 df_test["multiple_deliveries"] = df_test["multiple_deliveries"].replace(0.0,1.0)
 
+                # Number columns:
+                num_cols = [col for col in df_train.columns if df_train[col].dtype!= 'object']
+                logger.info("Number columns identified successfully")
+
+
+                #Removal of outliers:
+                df_train = outlier_removal(df_train, num_cols)
+                logger.info("Outliers removed!!!")
+
+                # Outlier detection:
+                df_test = outlier_removal(df_test, num_cols)
+                logger.info("Outliers removed!!!")
+
                 # Calling Feature Classifier for training data:
                 feature_classifier_obj = FeatureClassifier(df_train,target_column)
-                one_hot_cols, ordinal_cols, num_cols, ordinal_columns_mapping = feature_classifier_obj.ordinal_onehot_numerical_divide()
+                one_hot_cols, ordinal_cols, num_cols, ordinal_columns_mapping, one_hot_column_mapping = feature_classifier_obj.ordinal_onehot_numerical_divide()
                 logger.info("Categorical columns  and numerical columns divided successfully")
 
                 df_train = fill_empty_with_mode(df_train,one_hot_cols)
@@ -115,13 +128,7 @@ class DataTransformation:
                 df_test = fill_empty_with_mode(df_test,ordinal_cols)
                 logger.info("Empty values filled with mode successfully")
 
-                # Outlier detection:
-                df_train = outlier_removal(df_train, num_cols)
-                logger.info("Outliers removed!!!")
-
-                # Outlier detection:
-                df_test = outlier_removal(df_test, num_cols)
-                logger.info("Outliers removed!!!")
+               
 
                 # Listing all the categories:
                 categories = []
@@ -146,11 +153,22 @@ class DataTransformation:
                 X_test_arr = preprocessor_obj.transform(X_test)
                 logger.info("Preprocessing done successfully!!!")
 
-                train_arr = np.c_(X_train_arr, np.array(y_train))
-                test_arr = np.c_(X_test_arr, np.array(y_test))
+                train_arr = np.c_[X_train_arr, np.array(y_train)]
+                test_arr = np.c_[X_test_arr, np.array(y_test)]
 
                 logger.info("Data transformation done successfully!!!")
 
+                categorical_column_mapping = ordinal_columns_mapping | one_hot_column_mapping
+
+                #Saving ordinal_columns_mapping into ordinal_columns_mapping.json for app.py use:
+                categorical_column_mapping_path = os.path.join(self.data_transformation_config.current_directory, "categorical_column_mapping.json")
+                with open(categorical_column_mapping_path, 'w') as f:
+                    json.dump(categorical_column_mapping, f)
+
+                logger.info("ordinal_columns_mapping.json created successfully!!!")
+
+                
+                #Saving the Pickle file preprocessing object:
                 save_objects(
                     file_path = self.data_transformation_config.preprocessor_obj_file_path,
                     obj = preprocessor_obj
@@ -161,7 +179,7 @@ class DataTransformation:
 
             except Exception as e:
                 logger.error("Error occured while initiating the data transformation process: {}".format(e))
-                raise CustomException("Error occured while initiating the data transformation process: {}".format(e, sys))
+                raise CustomException("Error occured while initiating the data transformation process: {}".format(e))
 
 
             

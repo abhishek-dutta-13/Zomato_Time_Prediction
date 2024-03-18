@@ -5,7 +5,8 @@ from src.exception import CustomException
 from src.logger import logger
 from math import radians, sin, cos, sqrt, atan2
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
-import os, sys
+from sklearn.metrics import r2_score
+import os
 import pickle
 
 
@@ -86,13 +87,14 @@ class FeatureClassifier:
         This function is used to get the mapping of ordinal columns.
         Each key is named as 'ColumnName_Map' and contains the unique values for that column.
         """
-        ordinal_columns_mapping = {}
+        columns_mapping = {}
+        
         for col in columns:
             sorted_groups = self.df.groupby(col)[self.target_column].mean().sort_values().index.tolist()
-            key_name = f"{col}_Map"
-            ordinal_columns_mapping[key_name] = sorted_groups
+            key_name = f"{col}"
+            columns_mapping[key_name] = sorted_groups
         
-        return ordinal_columns_mapping
+        return columns_mapping
         
 
         
@@ -118,15 +120,18 @@ class FeatureClassifier:
                         one_hot_cols.append(column)
                 else:
                     num_cols.append(column)
+            
+            logger.info("Outliers removed!!!")
 
             #Get Mappingsd for ordinal columns:
             ordinal_columns_mapping = self.get_ordinal_columns_mapping(ordinal_cols)
-            return (one_hot_cols, ordinal_cols, num_cols, ordinal_columns_mapping)
+            one_hot_column_mapping = self.get_ordinal_columns_mapping(one_hot_cols)
+            return (one_hot_cols, ordinal_cols, num_cols, ordinal_columns_mapping, one_hot_column_mapping)
                  
 
         except Exception as e:
             print(e)
-            raise CustomException("Error in feature_classifier.ordinal_onehot_numerical_divide: {}".format(e, sys))
+            raise CustomException("Error in feature_classifier.ordinal_onehot_numerical_divide: {}".format(e))
 
 def save_objects(file_path, obj):
     try:
@@ -135,7 +140,7 @@ def save_objects(file_path, obj):
         logger.info("Object saved successfully")
     except Exception as e:
         logger.error("Error in save_objects: {}".format(e))
-        raise CustomException("Error in save_objects: {}".format(e, sys))
+        raise CustomException("Error in save_objects: {}".format(e))
     
 
 def load_obj(file_path):
@@ -146,7 +151,23 @@ def load_obj(file_path):
         return obj
     except Exception as e:
         logger.error("Error in load_obj: {}".format(e))
-        raise CustomException("Error in load_obj: {}".format(e, sys))
+        raise CustomException("Error in load_obj: {}".format(e))
     
-def evaluate_model():
-    pass
+def evaluate_model(X_train, y_train, X_test, y_test, models):
+    report = {}
+    try:
+        for i in range(len(models)):
+            model = list(models.values())[i]
+            model.fit(X_train, y_train)
+            y_pred = model.predict(X_test)
+
+            test_model_score = r2_score(y_test, y_pred)
+
+            report[list(models.keys())[i]] = test_model_score
+            logger.info(f"Model: {list(models.keys())[i]}, R2 score: {test_model_score}")
+        logger.info("Model evaluation complete")
+        return report
+
+    except Exception as e:
+        logger.error("Error in evaluate_model: {}".format(e))
+        raise CustomException("Error in evaluate_model: {}".format(e))

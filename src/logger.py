@@ -14,7 +14,7 @@ logs_directory = os.path.join(current_directory, "logs")
 os.makedirs(logs_directory, exist_ok=True)
 
 # Define log file name and path
-log_file = f"{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}.log"
+log_file = f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}.log"
 log_path = os.path.join(logs_directory, log_file)
 
 #Custome logger
