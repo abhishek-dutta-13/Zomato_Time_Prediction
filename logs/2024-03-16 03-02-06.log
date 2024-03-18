@@ -1,0 +1,17 @@
+2024-03-16 03:02:07 - Zomato_Time_Prediction - utils - INFO : Connecting to MySQL...
+2024-03-16 03:02:07 - Zomato_Time_Prediction - utils - INFO : MySQL connection established
+2024-03-16 03:02:08 - Zomato_Time_Prediction - 272529110 - INFO : MySQL connection closed
+2024-03-16 04:40:28 - Zomato_Time_Prediction - 2891666014 - INFO : LinearRegression:
+
+2024-03-16 04:40:28 - Zomato_Time_Prediction - 2891666014 - INFO : Testing Score: 0.4411931564967969
+
+
+
+
+2024-03-16 04:40:41 - Zomato_Time_Prediction - 2891666014 - INFO : Lasso:
+
+2024-03-16 04:40:41 - Zomato_Time_Prediction - 2891666014 - INFO : Training Score: 0.4257620856641628
+
+2024-03-16 04:40:41 - Zomato_Time_Prediction - 2891666014 - INFO : Best Params: {'alpha': 0.2}
+
+2024-03-16 04:41:22 - Zomato_Time_Prediction - 1781425642 - INFO : Hello

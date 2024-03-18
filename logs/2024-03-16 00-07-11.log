@@ -1,0 +1,12 @@
+2024-03-16 00:07:24 - Zomato_Time_Prediction - utils - INFO : Connecting to MySQL...
+2024-03-16 00:07:24 - Zomato_Time_Prediction - utils - INFO : MySQL connection established
+2024-03-16 00:07:24 - Zomato_Time_Prediction - utils - INFO : MySQL connection closed
+2024-03-16 00:07:24 - Zomato_Time_Prediction - 3666154731 - ERROR : Error extracting data from MySQL
+2024-03-16 00:08:15 - Zomato_Time_Prediction - utils - INFO : Connecting to MySQL...
+2024-03-16 00:08:15 - Zomato_Time_Prediction - utils - INFO : MySQL connection established
+2024-03-16 00:08:15 - Zomato_Time_Prediction - utils - INFO : MySQL connection closed
+2024-03-16 00:08:15 - Zomato_Time_Prediction - 3666154731 - ERROR : Error extracting data from MySQL
+2024-03-16 00:10:06 - Zomato_Time_Prediction - utils - INFO : Connecting to MySQL...
+2024-03-16 00:10:06 - Zomato_Time_Prediction - utils - INFO : MySQL connection established
+2024-03-16 00:10:06 - Zomato_Time_Prediction - utils - INFO : MySQL connection closed
+2024-03-16 00:10:06 - Zomato_Time_Prediction - 2329639357 - ERROR : Error extracting data from MySQL
