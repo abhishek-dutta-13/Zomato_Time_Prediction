@@ -2,4 +2,4 @@ venv
 build
 dist
 zomato_project.egg-info
-model.pkl
+artifacts/model.pkl
